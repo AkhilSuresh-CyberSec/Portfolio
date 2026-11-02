@@ -18,13 +18,35 @@
 <canvas id="cyber-canvas"></canvas>
 <div class="cyber-grid-overlay"></div>
 
-<!-- Realistic Loading Animation with Dual Rings -->
-<div id="page-loader">
-  <div class="dual-ring"></div>
-  <div class="cyber-progress">
-    <div class="cyber-progress-bar"></div>
+<!-- Futuristic Cybersec Loading Screen with Calibrated Delay -->
+<div id="page-loader" aria-live="polite">
+  <div class="loader-backdrop-glow"></div>
+  <div class="loader-content">
+    <div class="cyber-radar-wrapper">
+      <div class="dual-ring"></div>
+      <div class="radar-scan"></div>
+      <div class="radar-core-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="loader-meta">
+      <div class="loader-status">
+        <span class="status-indicator"></span>
+        <span id="loader-step-text">Initializing Defense Grid...</span>
+      </div>
+      <div class="cyber-progress">
+        <div class="cyber-progress-bar"></div>
+      </div>
+      <div class="loader-info-row">
+        <span class="sec-tag">SECOPS PROTOCOL v2.6</span>
+        <span class="loader-pct-badge"><span id="loading-pct">00%</span></span>
+      </div>
+    </div>
   </div>
-  <div class="loader-text">Loading <span id="loading-pct">0%</span></div>
 </div>
 
 <!-- Tab Navigation Loader Bar -->
@@ -231,45 +253,76 @@
 </button>
 
 <script>
-// --- Initial Loader with Instant Step & Failsafe ---
+// --- Enhanced Cybersecurity Loader Simulation with Controlled Delay ---
 (function() {
-  var pct = 0;
-  var finished = false;
-  var pctEl = document.getElementById('loading-pct');
-  var barEl = document.querySelector('.cyber-progress-bar');
-  var loader = document.getElementById('page-loader');
+  const steps = [
+    { target: 20, text: "Initializing Defense Grid..." },
+    { target: 45, text: "Synchronizing MITRE ATT&CK Matrix..." },
+    { target: 70, text: "Decrypting Telemetry Logs..." },
+    { target: 92, text: "Verifying SOC Integrity..." },
+    { target: 100, text: "SecOps Clearance Granted." }
+  ];
 
-  function dismiss() {
-    if (finished) return;
-    finished = true;
-    if (int) clearInterval(int);
-    if (pctEl) pctEl.innerText = '100%';
-    if (barEl) barEl.style.width = '100%';
-    if (loader) {
-      loader.style.opacity = '0';
-      loader.style.pointerEvents = 'none';
-      setTimeout(function() {
-        if (loader && loader.parentNode) loader.parentNode.removeChild(loader);
-      }, 350);
-    }
+  let currentStepIdx = 0;
+  let progress = 0;
+  const pctEl = document.getElementById('loading-pct');
+  const barEl = document.querySelector('.cyber-progress-bar');
+  const stepTextEl = document.getElementById('loader-step-text');
+  const loader = document.getElementById('page-loader');
+  let isDone = false;
+
+  function updateDisplay(val) {
+    if (pctEl) pctEl.innerText = (val < 10 ? '0' : '') + Math.floor(val) + '%';
+    if (barEl) barEl.style.width = val + '%';
   }
 
-  var int = setInterval(function() {
-    pct += 25;
-    if (pct >= 100) {
-      dismiss();
+  function dismissLoader() {
+    if (isDone) return;
+    isDone = true;
+    updateDisplay(100);
+    if (stepTextEl) stepTextEl.innerText = "SecOps Clearance Granted.";
+    
+    // Controlled smooth exit animation
+    setTimeout(function() {
+      if (loader) {
+        loader.classList.add('loader-finished');
+        setTimeout(function() {
+          if (loader && loader.parentNode) {
+            loader.parentNode.removeChild(loader);
+          }
+        }, 650);
+      }
+    }, 280);
+  }
+
+  // Smooth realistic incrementation simulating network socket handshakes (~1.4s delay)
+  const timer = setInterval(function() {
+    if (isDone) {
+      clearInterval(timer);
+      return;
+    }
+
+    const currentStep = steps[currentStepIdx];
+    if (progress < currentStep.target) {
+      // Natural variable speed
+      progress += Math.random() * 3.5 + 1.2;
+      if (progress > currentStep.target) progress = currentStep.target;
+      updateDisplay(progress);
     } else {
-      if (pctEl) pctEl.innerText = pct + '%';
-      if (barEl) barEl.style.width = pct + '%';
+      currentStepIdx++;
+      if (currentStepIdx < steps.length) {
+        if (stepTextEl) stepTextEl.innerText = steps[currentStepIdx].text;
+      } else {
+        clearInterval(timer);
+        dismissLoader();
+      }
     }
-  }, 20);
+  }, 32);
 
-  window.addEventListener('touchstart', dismiss, { passive: true, once: true });
-  window.addEventListener('DOMContentLoaded', function() { setTimeout(dismiss, 120); });
-  if (document.readyState === 'complete' || document.readyState === 'interactive') {
-    setTimeout(dismiss, 80);
-  }
-  setTimeout(dismiss, 450);
+  // Fallback safety timeout
+  setTimeout(function() {
+    if (!isDone) dismissLoader();
+  }, 3500);
 })();
 
 // --- Live Cybersecurity Dynamic Canvas (Blue/Red Nodes, Data Packets, Mesh) ---
@@ -378,8 +431,7 @@
     particles.push(new Particle());
   }
 
-  let lastFrameTime = 0;
-  function animate(time) {
+  function animate() {
     ctx.clearRect(0, 0, width, height);
 
     // Update & draw particles
@@ -429,24 +481,25 @@
 
 // --- Enhanced Glitch Scan Navigation Effect ---
 document.querySelectorAll('.bar nav a').forEach(link => {
-  link.addEventListener('click', (e) => {
+  link.addEventListener('click', () => {
     const targetId = link.getAttribute('href');
     if (targetId && targetId.startsWith('#')) {
       const navLoader = document.getElementById('nav-loader');
-      
-      navLoader.style.transition = 'none';
-      navLoader.style.transform = 'scaleX(0)';
-      setTimeout(() => {
-        navLoader.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
-        navLoader.style.transform = 'scaleX(1)';
+      if (navLoader) {
+        navLoader.style.transition = 'none';
+        navLoader.style.transform = 'scaleX(0)';
         setTimeout(() => {
-          navLoader.style.opacity = '0';
+          navLoader.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)';
+          navLoader.style.transform = 'scaleX(1)';
           setTimeout(() => {
-            navLoader.style.transform = 'scaleX(0)';
-            navLoader.style.opacity = '1';
-          }, 300);
-        }, 500);
-      }, 50);
+            navLoader.style.opacity = '0';
+            setTimeout(() => {
+              navLoader.style.transform = 'scaleX(0)';
+              navLoader.style.opacity = '1';
+            }, 300);
+          }, 500);
+        }, 50);
+      }
 
       const targetSec = document.querySelector(targetId);
       if(targetSec) {
@@ -507,7 +560,7 @@ document.querySelectorAll('.bar nav a').forEach(link => {
     });
   }
 
-  // --- Mobile Scroll-to-Top Logic ---
+  // Mobile Scroll-to-Top Logic
   var scrollTopBtn = document.getElementById('scroll-to-top');
   if (scrollTopBtn) {
     var checkScroll = function() {
