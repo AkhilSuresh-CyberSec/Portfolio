@@ -1,0 +1,1234 @@
+/* ==========================================================================
+   Akhil Suresh - Cloud Security Engineer Portfolio Theme
+   Theme: Dual Cyber Threat Edition (Red Team Offense / Blue Team Defense)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Theme Variables & Reset
+   -------------------------------------------------------------------------- */
+:root {
+  --bg: #080c12;
+  --bg-gradient: radial-gradient(circle at 50% 20%, #0d1522 0%, #06090e 100%);
+  --surface: rgba(13, 18, 25, 0.85);
+  --surface-hover: rgba(20, 28, 38, 0.95);
+  --surface-solid: #0d1219;
+  
+  --ink: #e4ebf0;
+  --muted: #9aabb8;
+  --faint: rgba(228, 235, 240, 0.08);
+
+  /* Dual Cybersecurity Palette */
+  --accent-blue: #00e5ff;   /* Blue Team: Defense, Monitoring, SOC */
+  --accent-blue-glow: rgba(0, 229, 255, 0.35);
+  --accent-red: #ff2a5f;    /* Red Team: Attack Vectors, VAPT, Exploitation */
+  --accent-red-glow: rgba(255, 42, 95, 0.35);
+  --accent-purple: #9d4edd; /* Purple Team / Hybrid SecOps Blend */
+  --accent-purple-glow: rgba(157, 78, 221, 0.35);
+  --accent-gold: #ffaa00;   /* Threat Intelligence / CTI */
+
+  --line: rgba(157, 78, 221, 0.22);
+  --line-light: rgba(255, 255, 255, 0.06);
+
+  /* Typography */
+  --f-display: "Archivo", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --f-body: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Transitions */
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+  --trans-fast: 0.2s ease;
+  --trans-base: 0.3s ease;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+  background-color: var(--bg);
+  background-image: var(--bg-gradient);
+  color: var(--ink);
+  font-family: var(--f-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+  max-width: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------------------------------
+   2. Live Cybersecurity Dynamic Canvas & Grid Matrix
+   -------------------------------------------------------------------------- */
+#cyber-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  background: transparent;
+  display: block;
+}
+
+/* Digital Grid Matrix Overlay */
+.cyber-grid-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-image: 
+    linear-gradient(to right, rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(157, 78, 221, 0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 95%);
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, black 50%, transparent 95%);
+}
+
+/* --------------------------------------------------------------------------
+   3. Loading Screen & Real-time Progress Bar
+   -------------------------------------------------------------------------- */
+#page-loader {
+  position: fixed;
+  inset: 0;
+  background: #06090e;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.5s var(--ease-smooth), visibility 0.5s;
+  font-family: var(--f-mono);
+  color: var(--ink);
+}
+
+.dual-ring {
+  position: relative;
+  width: 76px;
+  height: 76px;
+  margin-bottom: 26px;
+}
+
+.dual-ring::before,
+.dual-ring::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3.5px solid transparent;
+}
+
+.dual-ring::before {
+  border-top-color: var(--accent-blue);
+  border-left-color: var(--accent-blue);
+  animation: spin-blue 1.35s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow: 0 0 16px var(--accent-blue-glow);
+}
+
+.dual-ring::after {
+  border-bottom-color: var(--accent-red);
+  border-right-color: var(--accent-red);
+  animation: spin-red 1.35s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+  box-shadow: 0 0 16px var(--accent-red-glow);
+}
+
+@keyframes spin-blue {
+  0%   { transform: rotate(0deg) scale(1); }
+  50%  { transform: rotate(180deg) scale(1.08); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes spin-red {
+  0%   { transform: rotate(360deg) scale(1.08); }
+  50%  { transform: rotate(180deg) scale(1); }
+  100% { transform: rotate(0deg) scale(1.08); }
+}
+
+.cyber-progress {
+  width: min(320px, 80vw);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cyber-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-red));
+  box-shadow: 0 0 12px var(--accent-purple);
+  transition: width 0.05s linear;
+}
+
+.loader-text {
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.loader-text span {
+  font-weight: 700;
+  width: 44px;
+  text-align: right;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* --------------------------------------------------------------------------
+   4. Top Cyber Scan Navigation Bar
+   -------------------------------------------------------------------------- */
+#nav-loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple), var(--accent-red));
+  z-index: 9998;
+  transform: scaleX(0);
+  transform-origin: center;
+  box-shadow: 0 0 15px var(--accent-purple);
+  pointer-events: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. General Structure & Typography
+   -------------------------------------------------------------------------- */
+.wrap {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-left: max(18px, env(safe-area-inset-left, 0px));
+  padding-right: max(18px, env(safe-area-inset-right, 0px));
+}
+
+a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  text-underline-offset: 3px;
+  transition: color var(--trans-base);
+}
+
+a:hover {
+  color: var(--accent-red);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--accent-purple);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+section {
+  padding-block: 46px;
+  border-top: 1px solid var(--line);
+  opacity: 0;
+  transform: translateY(32px);
+  transition: opacity 0.75s var(--ease-smooth), transform 0.75s var(--ease-smooth);
+}
+
+section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+section:first-of-type {
+  border-top: none;
+}
+
+.eyebrow {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 600;
+}
+
+h1, h2, h3 {
+  font-family: var(--f-display);
+  margin: 0;
+  text-wrap: balance;
+}
+
+h2 {
+  font-size: clamp(25px, 4vw, 34px);
+  font-weight: 700;
+  font-stretch: 108%;
+  line-height: 1.18;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+p {
+  margin: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Header & Navigation
+   -------------------------------------------------------------------------- */
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  justify-content: space-between;
+  align-items: center;
+  padding-block: 22px;
+}
+
+.mark {
+  font-family: var(--f-mono);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 12px rgba(157, 78, 221, 0.35);
+}
+
+.bar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 20px;
+  font-family: var(--f-mono);
+  font-size: 13px;
+}
+
+.bar nav a {
+  position: relative;
+  color: var(--muted);
+  transition: color var(--trans-base);
+  padding-bottom: 4px;
+}
+
+.bar nav a:hover {
+  color: #fff;
+}
+
+.bar nav a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 50%;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+  transition: width var(--trans-base), left var(--trans-base);
+}
+
+.bar nav a:hover::after {
+  width: 100%;
+  left: 0;
+  box-shadow: 0 0 8px var(--accent-purple);
+}
+
+/* --------------------------------------------------------------------------
+   7. Hero Section & Intel Card
+   -------------------------------------------------------------------------- */
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 40px;
+  align-items: end;
+  padding-block: 36px 54px;
+}
+
+.hero-header {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-bottom: 22px;
+}
+
+.hero-photo {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid transparent;
+  background-image: linear-gradient(#0e161d, #0e161d), linear-gradient(135deg, var(--accent-blue), var(--accent-red));
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+  transition: transform 0.4s var(--ease-smooth), box-shadow 0.4s var(--ease-smooth);
+}
+
+.hero-photo:hover {
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 0 28px rgba(255, 42, 95, 0.55), 0 0 28px rgba(0, 229, 255, 0.55);
+}
+
+h1 {
+  font-size: clamp(40px, 8vw, 72px);
+  font-weight: 800;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  background: linear-gradient(135deg, #ffffff 20%, var(--accent-blue) 65%, var(--accent-red) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 25px rgba(157, 78, 221, 0.25);
+}
+
+.role {
+  font-family: var(--f-mono);
+  font-size: 14px;
+  color: var(--accent-blue);
+  margin: 18px 0 16px;
+  letter-spacing: 0.02em;
+}
+
+.lede {
+  max-width: 56ch;
+  font-size: 18px;
+  color: var(--ink);
+}
+
+.file {
+  margin: 0;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  padding: 6px 18px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform var(--trans-base), border-color var(--trans-base), box-shadow var(--trans-base);
+  border-radius: 4px;
+}
+
+.file:hover {
+  border-color: var(--accent-purple);
+  box-shadow: 0 5px 22px rgba(157, 78, 221, 0.18);
+  transform: translateY(-2px);
+}
+
+.file div {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 12px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line-light);
+}
+
+.file div:last-child {
+  border-bottom: none;
+}
+
+.file dt {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  padding-top: 3px;
+}
+
+.file dd {
+  margin: 0;
+  font-size: 15px;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.live::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00ff66;
+  box-shadow: 0 0 10px #00ff66;
+  animation: pulse-dot 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.85); }
+}
+
+/* --------------------------------------------------------------------------
+   8. Measured Results Section
+   -------------------------------------------------------------------------- */
+.results {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.res {
+  padding: 22px 22px 22px 15px;
+  border-bottom: 1px solid var(--line);
+  border-radius: 4px;
+  border-left: 2px solid transparent;
+}
+
+.res:nth-child(3n+2),
+.res:nth-child(3n) {
+  border-left: 1px solid var(--line);
+}
+
+.res:hover {
+  border-left-color: var(--accent-blue);
+}
+
+.res:nth-child(even):hover {
+  border-left-color: var(--accent-red);
+}
+
+.res b {
+  display: block;
+  font-family: var(--f-display);
+  font-weight: 800;
+  font-size: clamp(38px, 6vw, 58px);
+  line-height: 1;
+  color: #fff;
+  text-shadow: 0 0 16px rgba(157, 78, 221, 0.4);
+}
+
+.res span {
+  display: block;
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 15px;
+  max-width: 30ch;
+}
+
+/* --------------------------------------------------------------------------
+   9. Work Log & Interactive Chips
+   -------------------------------------------------------------------------- */
+.head-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px 32px;
+  justify-content: space-between;
+  align-items: end;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.chip {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: 6px 13px;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.45);
+  color: var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--trans-base);
+}
+
+.chip:hover {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 10px rgba(157, 78, 221, 0.35);
+}
+
+.chip[data-filter="all"][aria-pressed="true"] {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: #fff;
+  box-shadow: 0 0 12px var(--accent-purple);
+}
+
+.chip[data-filter="soc"][aria-pressed="true"] {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 0 12px var(--accent-blue);
+}
+
+.chip[data-filter="red"][aria-pressed="true"] {
+  background: var(--accent-red);
+  border-color: var(--accent-red);
+  color: #fff;
+  box-shadow: 0 0 12px var(--accent-red);
+}
+
+.chip[data-filter="vuln"][aria-pressed="true"] {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+  color: #fff;
+  box-shadow: 0 0 12px var(--accent-purple);
+}
+
+.chip[data-filter="cti"][aria-pressed="true"] {
+  background: var(--accent-gold);
+  border-color: var(--accent-gold);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 0 12px var(--accent-gold);
+}
+
+.job {
+  margin-top: 26px;
+  display: grid;
+  grid-template-columns: minmax(0, 240px) minmax(0, 1fr);
+  gap: 28px 44px;
+  padding: 22px;
+  border-radius: 6px;
+  border: 1px solid var(--line-light);
+  background: var(--surface);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.job h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.job .when {
+  font-family: var(--f-mono);
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+.job .what {
+  color: var(--muted);
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+.log {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+
+.log li {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line-light);
+  transition: color var(--trans-fast);
+}
+
+.log li:hover {
+  color: #fff;
+}
+
+.log li:first-child {
+  padding-top: 0;
+}
+
+.tags {
+  display: inline-flex;
+  gap: 6px;
+  margin-left: 8px;
+  vertical-align: 1px;
+}
+
+.tag-red {
+  font-style: normal;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--accent-red);
+  background: rgba(255, 42, 95, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 42, 95, 0.35);
+}
+
+.tag-blue {
+  font-style: normal;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--accent-blue);
+  background: rgba(0, 229, 255, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 229, 255, 0.35);
+}
+
+.tag-purple {
+  font-style: normal;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--accent-purple);
+  background: rgba(157, 78, 221, 0.12);
+  padding: 2px 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(157, 78, 221, 0.35);
+}
+
+/* --------------------------------------------------------------------------
+   10. Detection Coverage & Incident Response Flow
+   -------------------------------------------------------------------------- */
+.two {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 44px;
+}
+
+.tactics {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  margin-top: 22px;
+  gap: 12px;
+}
+
+.tac {
+  padding: 16px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-left: 3px solid var(--accent-purple);
+  border-radius: 4px;
+  cursor: default;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.tac:hover {
+  border-left-color: var(--accent-red);
+}
+
+.tac code {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--accent-blue);
+}
+
+.tac:hover code {
+  color: var(--accent-red);
+}
+
+.tac strong {
+  display: block;
+  margin-top: 8px;
+  font-family: var(--f-display);
+  font-size: 17px;
+}
+
+.flow {
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0;
+}
+
+.flow li {
+  position: relative;
+  padding: 16px 14px 0 0;
+  border-top: 2px solid var(--line);
+  transition: transform var(--trans-base);
+}
+
+.flow li:hover {
+  transform: translateY(-3px);
+  border-top-color: var(--accent-blue);
+}
+
+.flow li:nth-child(even):hover {
+  border-top-color: var(--accent-red);
+}
+
+.flow li::before {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--accent-purple);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--accent-purple);
+  transition: transform var(--trans-base), box-shadow var(--trans-base), background var(--trans-base);
+}
+
+.flow li:hover::before {
+  transform: scale(1.5);
+  background: var(--accent-blue);
+  box-shadow: 0 0 15px var(--accent-blue);
+}
+
+.flow li:nth-child(even):hover::before {
+  background: var(--accent-red);
+  box-shadow: 0 0 15px var(--accent-red);
+}
+
+.flow strong {
+  display: block;
+  font-family: var(--f-display);
+  font-size: 16px;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.flow span {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.45;
+  display: block;
+}
+
+/* --------------------------------------------------------------------------
+   11. Skills & Toolbox
+   -------------------------------------------------------------------------- */
+.tools {
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+
+.tools div {
+  display: grid;
+  grid-template-columns: 210px minmax(0, 1fr);
+  gap: 8px 24px;
+  padding: 14px 15px;
+  border-bottom: 1px solid var(--line-light);
+  border-radius: 4px;
+  background: var(--surface);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.tools dt {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  padding-top: 3px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--accent-blue), var(--accent-red));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+}
+
+.tools dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tools dd span {
+  font-size: 14px;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  transition: border-color var(--trans-fast), background var(--trans-fast), transform var(--trans-fast);
+  color: var(--ink);
+}
+
+.tools div:hover dd span {
+  border-color: rgba(157, 78, 221, 0.4);
+}
+
+.tools dd span:hover {
+  background: rgba(157, 78, 221, 0.22);
+  border-color: var(--accent-purple);
+  transform: translateY(-2px);
+  color: #fff;
+}
+
+/* --------------------------------------------------------------------------
+   12. Credentials, Languages & Contact Section
+   -------------------------------------------------------------------------- */
+.cols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 44px;
+  margin-top: 26px;
+}
+
+.certs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.certs li {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--line-light);
+  display: flex;
+  justify-content: space-between;
+  border-radius: 4px;
+  background: var(--surface);
+  border-left: 2px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.certs li:hover {
+  border-left-color: var(--accent-blue);
+}
+
+.certs li:nth-child(even):hover {
+  border-left-color: var(--accent-red);
+}
+
+.certs li span {
+  color: var(--muted);
+  font-size: 14px;
+  font-family: var(--f-mono);
+}
+
+.certs li span:first-child {
+  color: var(--ink);
+}
+
+.lang-box {
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 4px;
+  margin-top: 22px;
+  border-left: 3px solid var(--accent-purple);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.lang-box:hover {
+  border-left-color: var(--accent-red);
+}
+
+.lang-box h3 {
+  margin-bottom: 8px;
+}
+
+.lang-box .when {
+  font-family: var(--f-mono);
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.lang-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.lang-tags span {
+  font-family: var(--f-mono);
+  font-size: 13px;
+  padding: 4px 12px;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--accent-purple);
+  color: var(--accent-blue);
+  border-radius: 4px;
+  transition: transform var(--trans-fast), border-color var(--trans-fast), color var(--trans-fast);
+}
+
+.lang-box:hover .lang-tags span {
+  border-color: var(--accent-red);
+  color: var(--accent-red);
+  transform: translateY(-2px);
+}
+
+/* Contact */
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 32px 44px;
+  align-items: end;
+}
+
+.reach {
+  display: grid;
+  gap: 12px;
+}
+
+.reach div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 4px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.reach code {
+  font-family: var(--f-mono);
+  font-size: 15px;
+  color: var(--accent-blue);
+}
+
+.reach div:hover code {
+  color: var(--accent-red);
+}
+
+.reach a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.reach a:hover {
+  color: var(--accent-red);
+}
+
+.reach svg {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--trans-base), color var(--trans-base), fill var(--trans-base);
+}
+
+.reach div:hover svg {
+  color: var(--accent-red);
+  fill: var(--accent-red);
+  transform: scale(1.1);
+}
+
+.reach button {
+  margin-left: auto;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  padding: 6px 14px;
+  border: 1px solid var(--accent-purple);
+  background: transparent;
+  color: var(--accent-purple);
+  cursor: pointer;
+  transition: background var(--trans-base), color var(--trans-base), box-shadow var(--trans-base);
+  border-radius: 3px;
+}
+
+.reach button:hover {
+  background: var(--accent-purple);
+  color: #fff;
+  box-shadow: 0 0 10px var(--accent-purple);
+}
+
+footer {
+  padding-block: 28px 40px;
+  border-top: 1px solid var(--line);
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* --------------------------------------------------------------------------
+   13. Scroll to Top Floating Button (Mobile Focused)
+   -------------------------------------------------------------------------- */
+#scroll-to-top {
+  display: none;
+  position: fixed;
+  bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+  right: calc(18px + env(safe-area-inset-right, 0px));
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-purple);
+  background: rgba(13, 18, 25, 0.92);
+  color: var(--accent-blue);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6), 0 0 12px rgba(157, 78, 221, 0.35);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(16px) scale(0.9);
+  transition: opacity 0.3s var(--ease-smooth),
+              visibility 0.3s var(--ease-smooth),
+              transform 0.3s var(--ease-smooth),
+              border-color 0.25s ease,
+              box-shadow 0.25s ease,
+              color 0.25s ease;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#scroll-to-top svg {
+  width: 22px;
+  height: 22px;
+  stroke: currentColor;
+  transition: transform 0.25s ease;
+}
+
+#scroll-to-top:hover,
+#scroll-to-top:active {
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.7), 0 0 16px var(--accent-red-glow);
+}
+
+#scroll-to-top:active svg {
+  transform: translateY(-2px);
+}
+
+/* Display and enable exclusively on mobile & tablets */
+@media (max-width: 860px) {
+  #scroll-to-top {
+    display: inline-flex;
+  }
+  #scroll-to-top.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Global Hover & Glitch Animations
+   -------------------------------------------------------------------------- */
+.res, .job, .tac, .tools div, .certs li, .reach div, .lang-box {
+  transition: transform var(--trans-base), border-color var(--trans-base), box-shadow var(--trans-base), background-color var(--trans-base);
+}
+
+.res:hover, .job:hover, .tac:hover, .tools div:hover, .certs li:hover, .reach div:hover, .lang-box:hover {
+  transform: translateY(-3px);
+  border-color: rgba(157, 78, 221, 0.5);
+  background: var(--surface-hover);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5), 0 0 14px rgba(157, 78, 221, 0.25);
+}
+
+/* --------------------------------------------------------------------------
+   15. Mobile & Tablet Responsiveness
+   -------------------------------------------------------------------------- */
+@media (max-width: 860px) {
+  .hero, .contact, .job, .cols {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .results {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .res:nth-child(even) {
+    border-left: 1px solid var(--line);
+  }
+  .res:nth-child(odd) {
+    border-left: 2px solid transparent;
+  }
+  .flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
+  }
+  .tools div {
+    grid-template-columns: 160px minmax(0, 1fr);
+    gap: 8px 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .bar {
+    padding-block: 14px;
+    gap: 10px 14px;
+    justify-content: center;
+    text-align: center;
+  }
+  .bar nav {
+    justify-content: center;
+    gap: 8px 14px;
+  }
+  .hero-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 16px;
+  }
+  .hero-photo {
+    width: 110px;
+    height: 110px;
+    margin: 0 auto;
+  }
+  .hero {
+    padding-block: 20px 36px;
+    gap: 28px;
+  }
+  .tools div {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 12px;
+  }
+  .tools dt {
+    margin-bottom: 4px;
+  }
+  .file div {
+    grid-template-columns: 80px minmax(0, 1fr);
+    gap: 8px;
+  }
+  .file dd {
+    word-break: break-word;
+  }
+  .certs li {
+    flex-direction: column;
+    gap: 4px;
+  }
+  .reach div {
+    justify-content: space-between;
+  }
+  .reach button {
+    margin-left: 0;
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .results {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .res {
+    border-left: 2px solid transparent !important;
+    padding-left: 12px;
+    padding-right: 0;
+  }
+  .flow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+  .chips {
+    gap: 6px;
+  }
+  .chip {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  h1 {
+    font-size: clamp(32px, 9vw, 44px);
+  }
+  .lede {
+    font-size: 16px;
+  }
+  .wrap {
+    padding-left: max(14px, env(safe-area-inset-left, 0px));
+    padding-right: max(14px, env(safe-area-inset-right, 0px));
+  }
+}
